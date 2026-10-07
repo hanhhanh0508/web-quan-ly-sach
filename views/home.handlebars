@@ -1,0 +1,72 @@
+<h2 class="mb-4 text-center text-primary">Hệ Thống Quản Lý Sách (Cloud Stateless)</h2>
+
+<div class="alert alert-info">
+  <strong>Môi trường Session:</strong> Lượt tải trang của bạn: <b>{{sessionViews}}</b> (Dữ liệu Session lưu trực tiếp tại Cloud MongoDB Atlas).
+</div>
+
+{{#if error}}
+  <div class="alert alert-danger">{{error}}</div>
+{{/if}}
+
+{{#if success}}
+  <div class="alert alert-success">{{success}}</div>
+{{/if}}
+
+<!-- Form Thêm Sách -->
+<div class="card mb-4 shadow-sm">
+  <div class="card-header bg-success text-white font-weight-bold">
+    Thêm Sách Mới (Điều hướng luồng GHI - WRITE Account)
+  </div>
+  <div class="card-body">
+    <form action="/books" method="POST">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Mã sản phẩm (Bắt đầu bằng 065):</label>
+          <input type="text" name="productCode" class="form-control" placeholder="Ví dụ: 065_SACH01" required>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Tên sách:</label>
+          <input type="text" name="title" class="form-control" placeholder="Nhập tên sách..." required>
+        </div>
+        <div class="col-md-4 mb-3">
+          <label class="form-label">Giá gốc (VNĐ):</label>
+          <input type="number" name="price" class="form-control" placeholder="100000" required>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-success">Thêm Sách Vào Cloud</button>
+    </form>
+  </div>
+</div>
+
+<!-- Bảng Danh sách Sách -->
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white font-weight-bold">
+    Danh Sách Sách (Điều hướng luồng ĐỌC - READ Account)
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered table-hover">
+      <thead class="table-dark">
+        <tr>
+          <th>Mã SP</th>
+          <th>Tên Sách</th>
+          <th>Giá Gốc</th>
+          <th>Giá Sau Thuế (VAT {{vatRate}}%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each books}}
+          <tr>
+            <td><code>{{this.productCode}}</code></td>
+            <td>{{this.title}}</td>
+            <td>{{this.price}} VNĐ</td>
+            <td><strong class="text-danger">{{this.priceAfterTax}} VNĐ</strong></td>
+          </tr>
+        {{else}}
+          <tr>
+            <td colspan="4" class="text-center text-muted">Chưa có dữ liệu sách trong Database.</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>
